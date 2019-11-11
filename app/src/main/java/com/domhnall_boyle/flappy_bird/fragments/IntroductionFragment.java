@@ -23,7 +23,7 @@ public class IntroductionFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.game = new Game(this.getContext());
-        this.introductionScreen = new IntroductionScreen(this.getActivity());
+        this.introductionScreen = new IntroductionScreen(this.getActivity(), this.game);
 
         return this.game.getView();
     }

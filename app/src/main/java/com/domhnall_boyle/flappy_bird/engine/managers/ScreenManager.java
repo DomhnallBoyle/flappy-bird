@@ -7,6 +7,8 @@ public class ScreenManager {
     private static ScreenManager screenManager;
     private GameScreen currentScreen;
 
+    // TODO: Implement HashMap of screens by name
+
     private ScreenManager() {}
 
     public static synchronized ScreenManager getInstance() {

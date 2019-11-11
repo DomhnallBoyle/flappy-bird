@@ -63,5 +63,6 @@ public class AssetManager {
     private void addBitmaps() {
         loadAndAddBitmap("BACKGROUND_DAY", "background_day.png");
         loadAndAddBitmap("BASE", "base.png");
+        loadAndAddBitmap("INTRO", "message.png");
     }
 }

@@ -26,9 +26,16 @@ public class GameLoop implements Runnable {
             draw();
             update();
 
+            try {
+                Thread.sleep(5);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                this.mIsRunning = false;
+            }
+
             long timeTookThisFrame = System.currentTimeMillis() - startFrameTime;
             if (timeTookThisFrame >= 1) {
-                fps = 1000 / timeTookThisFrame;
+                this.fps = 1000 / timeTookThisFrame;
             }
         }
     }

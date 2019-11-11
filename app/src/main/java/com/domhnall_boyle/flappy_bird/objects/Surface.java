@@ -1,7 +1,6 @@
 package com.domhnall_boyle.flappy_bird.objects;
 
 import com.domhnall_boyle.flappy_bird.engine.graphics.Scale;
-import com.domhnall_boyle.flappy_bird.engine.managers.ScreenManager;
 import com.domhnall_boyle.flappy_bird.game.Game;
 
 public class Surface extends GameObject {

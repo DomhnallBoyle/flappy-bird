@@ -1,28 +1,23 @@
 package com.domhnall_boyle.flappy_bird.screens;
 
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Point;
 import android.util.DisplayMetrics;
-import android.view.Display;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 
 import com.domhnall_boyle.flappy_bird.engine.graphics.IGraphics2D;
 import com.domhnall_boyle.flappy_bird.engine.managers.ScreenManager;
+import com.domhnall_boyle.flappy_bird.game.Game;
 
-public abstract class GameScreen extends SurfaceView {
+public abstract class GameScreen {
 
     // TODO: protected List<GameObject> gameObjects; ???
-
-    private SurfaceHolder surfaceHolder;
     private DisplayMetrics displayMetrics;
     protected int width, height;
+    protected Activity activity;
+    protected Game game;
 
-    public GameScreen(Activity activity) {
-        super(activity.getApplicationContext());
-        this.surfaceHolder = getHolder();
+    public GameScreen(Activity activity, Game game) {
+        this.activity = activity;
+        this.game = game;
         this.displayMetrics = new DisplayMetrics();
 
         // TODO: Not sure I need this - getWidth() and getHeight() functions
@@ -40,11 +35,11 @@ public abstract class GameScreen extends SurfaceView {
         this._update();
     }
 
-    public int getWidthPixels() {
+    public int getWidth() {
         return this.width;
     }
 
-    public int getHeightPixels() {
+    public int getHeight() {
         return this.height;
     }
 
