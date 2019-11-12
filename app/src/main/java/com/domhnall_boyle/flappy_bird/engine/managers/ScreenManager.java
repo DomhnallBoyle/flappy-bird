@@ -8,6 +8,7 @@ public class ScreenManager {
     private GameScreen currentScreen;
 
     // TODO: Implement HashMap of screens by name
+    // Actually, back stack might be better
 
     private ScreenManager() {}
 

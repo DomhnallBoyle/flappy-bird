@@ -64,5 +64,24 @@ public class AssetManager {
         loadAndAddBitmap("BACKGROUND_DAY", "background_day.png");
         loadAndAddBitmap("BASE", "base.png");
         loadAndAddBitmap("INTRO", "message.png");
+        for (int i = 0; i < 10; i++) {
+            loadAndAddBitmap("COUNTER_" + i, "counter_" + i + ".png");
+        }
+        String[] birds = new String[] {"redbird", "yellowbird", "bluebird"};
+        for (String bird: birds) {
+            loadAndAddBitmap(bird.toUpperCase() + "_DOWNFLAP",
+                    bird + "_downflap.png");
+            loadAndAddBitmap(bird.toUpperCase() + "_MIDFLAP",
+                    bird + "_midflap.png");
+            loadAndAddBitmap(bird.toUpperCase() + "_UPFLAP",
+                    bird + "_upflap.png");
+        }
+        String[] pipes = new String[] {"green", "red"};
+        for (String pipe: pipes) {
+            loadAndAddBitmap("PIPE_" + pipe.toUpperCase() + "_UP",
+                    "pipe_" + pipe + "_up.png");
+            loadAndAddBitmap("PIPE_" + pipe.toUpperCase() + "_DOWN",
+                    "pipe_" + pipe + "_down.png");
+        }
     }
 }

@@ -6,6 +6,11 @@ import android.util.DisplayMetrics;
 import com.domhnall_boyle.flappy_bird.engine.graphics.IGraphics2D;
 import com.domhnall_boyle.flappy_bird.engine.managers.ScreenManager;
 import com.domhnall_boyle.flappy_bird.game.Game;
+import com.domhnall_boyle.flappy_bird.objects.GameObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class GameScreen {
 
@@ -14,11 +19,13 @@ public abstract class GameScreen {
     protected int width, height;
     protected Activity activity;
     protected Game game;
+    protected List<GameObject> gameObjects;
 
     public GameScreen(Activity activity, Game game) {
         this.activity = activity;
         this.game = game;
         this.displayMetrics = new DisplayMetrics();
+        this.gameObjects = new ArrayList<>();
 
         // TODO: Not sure I need this - getWidth() and getHeight() functions
         activity.getWindowManager().getDefaultDisplay().getMetrics(this.displayMetrics);
@@ -28,7 +35,9 @@ public abstract class GameScreen {
     }
 
     public void draw(IGraphics2D graphics2D) {
-        this._draw(graphics2D);
+        for (GameObject gameObject: this.gameObjects) {
+            gameObject.draw(graphics2D);
+        }
     }
 
     public void update() {
@@ -43,6 +52,9 @@ public abstract class GameScreen {
         return this.height;
     }
 
-    abstract void _draw(IGraphics2D iGraphics2D);
+    protected void addGameObjects(GameObject[] gameObjects) {
+        this.gameObjects.addAll(Arrays.asList(gameObjects));
+    }
+
     abstract void _update();
 }
