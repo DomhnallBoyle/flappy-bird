@@ -8,7 +8,7 @@ public class Pipe extends GameObject {
 
     @Override
     public void update() {
-        this.setPosition(this.centre.getX() - 1, this.centre.getY());
+        this.setPosition(this.centre.getX() - X_SKIP, this.centre.getY());
         if (this.rect.right < 0) {
             // put back to initial position
             this.setPosition(this.initialX1, this.initialY1, this.initialX2, this.initialY2);

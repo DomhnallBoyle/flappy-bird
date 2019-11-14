@@ -3,12 +3,16 @@ package com.domhnall_boyle.flappy_bird.objects;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 
+import androidx.constraintlayout.solver.widgets.Rectangle;
+
 import com.domhnall_boyle.flappy_bird.engine.graphics.Scale;
 import com.domhnall_boyle.flappy_bird.engine.managers.AssetManager;
 import com.domhnall_boyle.flappy_bird.engine.graphics.IGraphics2D;
 import com.domhnall_boyle.flappy_bird.utilities.Vect;
 
 public abstract class GameObject {
+
+    protected final int X_SKIP = 2;
 
     protected AssetManager assetManager = AssetManager.getInstance();
     protected Rect rect = new Rect();
@@ -61,5 +65,9 @@ public abstract class GameObject {
 
     public Rect getRect() {
         return this.rect;
+    }
+
+    public boolean intersects(GameObject gameObject) {
+        return Rect.intersects(this.rect, gameObject.rect);
     }
 }

@@ -3,7 +3,6 @@ package com.domhnall_boyle.flappy_bird.objects;
 import com.domhnall_boyle.flappy_bird.engine.graphics.IGraphics2D;
 import com.domhnall_boyle.flappy_bird.engine.graphics.Scale;
 import com.domhnall_boyle.flappy_bird.game.Game;
-import com.domhnall_boyle.flappy_bird.utilities.Vect;
 
 public class DualPipe extends GameObject {
 
@@ -62,14 +61,17 @@ public class DualPipe extends GameObject {
 
         // update position of dual pipe object for reference
         this.setPosition(this.upPipe.centre.getX(), this.upPipe.rect.top + MID_SPACING);
-
-        // check for collisions
     }
 
     @Override
     public void draw(IGraphics2D graphics2D) {
         this.upPipe.draw(graphics2D);
         this.downPipe.draw(graphics2D);
+    }
+
+    @Override
+    public boolean intersects(GameObject gameObject) {
+        return this.upPipe.intersects(gameObject) || this.downPipe.intersects(gameObject);
     }
 
     private void updatePipeSpacing() {

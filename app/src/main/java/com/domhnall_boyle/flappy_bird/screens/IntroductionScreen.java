@@ -22,7 +22,7 @@ public class IntroductionScreen extends GameScreen {
     public IntroductionScreen(Activity activity, Game game) {
         super(activity, game);
 
-        this.background = new Background("BACKGROUND_DAY");
+        this.background = new Background("DAY");
         this.surface1 = new Surface();
         this.surface2 = new Surface(this.width, Scale.getY(85), this.width * 2, this.height);
         this.intro = new StaticObject("INTRO", Scale.getX(25), Scale.getY(25), Scale.getX(80), Scale.getY(75));

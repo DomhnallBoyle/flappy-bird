@@ -13,22 +13,25 @@ import com.domhnall_boyle.flappy_bird.objects.Surface;
 
 public class PlayScreen extends GameScreen {
 
+    private final int X_OFFSET = 1;
+
     private Background background;
     private ScoreCounter scoreCounter;
     private Player player;
     private Surface[] surfaces;
     private DualPipe[] dualPipes;
+    private boolean gameOver = false;
 
     public PlayScreen(Activity activity, Game game) {
         super(activity, game);
 
         this.scoreCounter = new ScoreCounter();
-        this.background = new Background("BACKGROUND_DAY");
+        this.background = new Background("DAY");
         this.surfaces = new Surface[] {
                 new Surface(),
                 new Surface(this.width, Scale.getY(85), this.width * 2, this.height)
         };
-        this.player = new Player("YELLOWBIRD_MIDFLAP");
+        this.player = new Player("YELLOW");
         this.dualPipes = new DualPipe[] {
                 new DualPipe("GREEN"),
                 null
@@ -41,26 +44,41 @@ public class PlayScreen extends GameScreen {
 
     @Override
     void _update() {
-        for (Surface surface: this.surfaces) {
-            surface.update();
-        }
+        this.player.update(this.game.getTouchEvents(), this.surfaces, gameOver);
 
-        this.scoreCounter.update();
+        if (!this.gameOver) {
+            for (Surface surface: this.surfaces) {
+                surface.update();
+            }
 
-        for (DualPipe dualPipe: this.dualPipes) {
-            if (dualPipe != null) {
-                dualPipe.update();
-                if (this.player.getCentre().getX() == dualPipe.getCentre().getX()) {
-                    this.scoreCounter.updateScore();
+            this.scoreCounter.update();
+
+            // if player passes first dual pipe, create a new dual pipe
+            if (this.player.getCentre().getX() + X_OFFSET == dualPipes[0].getCentre().getX()) {
+                DualPipe dualPipe = new DualPipe("GREEN");
+                this.dualPipes[1] = dualPipe;
+                this.gameObjects.set(2, dualPipe);
+            }
+
+            for (DualPipe dualPipe: this.dualPipes) {
+                if (dualPipe != null) {
+                    dualPipe.update();
+
+                    // update score if past a dual pipe
+                    if (this.player.getCentre().getX() + X_OFFSET == dualPipe.getCentre().getX()) {
+                        this.scoreCounter.updateScore();
+                    }
+
+                    // check for collisions
+                    if (dualPipe.intersects(this.player)) {
+                        this.gameOver = true;
+                    }
                 }
             }
+        } else {
+            // show gameover screen with buttons
         }
 
-        // if player passes first dual pipe, create a new dual pipe
-        if (this.player.getCentre().getX() == dualPipes[0].getCentre().getX()) {
-            DualPipe dualPipe = new DualPipe("GREEN");
-            this.dualPipes[1] = dualPipe;
-            this.gameObjects.set(2, dualPipe);
-        }
+        this.game.resetAccumulators();
     }
 }
