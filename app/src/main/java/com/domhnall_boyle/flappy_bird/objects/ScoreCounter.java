@@ -2,13 +2,16 @@ package com.domhnall_boyle.flappy_bird.objects;
 
 import com.domhnall_boyle.flappy_bird.engine.graphics.IGraphics2D;
 import com.domhnall_boyle.flappy_bird.engine.graphics.Scale;
-import com.domhnall_boyle.flappy_bird.engine.managers.ScreenManager;
-import com.domhnall_boyle.flappy_bird.game.Game;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ScoreCounter extends GameObject {
+
+    private final int START_X = Scale.getX(50);
+    private final int START_Y = Scale.getY(10);
+    private final int DIGIT_WIDTH = Scale.getX(10);
+    private final int DIGIT_HEIGHT = Scale.getY(10);
 
     private int score;
     private List<DigitCounter> digitCounters;
@@ -31,12 +34,21 @@ public class ScoreCounter extends GameObject {
             this.digitCounters.clear();
             String stringScore = String.valueOf(this.score);
 
+            int spacing = 0, startX = START_X;
+            if (stringScore.length() > 1) {
+                startX = START_X - ((stringScore.length() * DIGIT_WIDTH) / 2) + (DIGIT_WIDTH / 2);
+            }
+
             for (int i = 0; i < stringScore.length(); i++) {
                 char c = stringScore.charAt(i);
                 DigitCounter digitCounter = new DigitCounter("COUNTER_" + c,
-                        Scale.getX(47), Scale.getY(10),
-                        Scale.getX(57), Scale.getY(20));
+                        startX + spacing,
+                        START_Y,
+                        startX + DIGIT_WIDTH + spacing,
+                        START_Y + DIGIT_HEIGHT);
+
                 this.digitCounters.add(digitCounter);
+                spacing += DIGIT_WIDTH;
             }
         }
     }

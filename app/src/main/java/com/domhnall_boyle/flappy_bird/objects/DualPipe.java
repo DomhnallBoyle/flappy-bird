@@ -3,6 +3,7 @@ package com.domhnall_boyle.flappy_bird.objects;
 import com.domhnall_boyle.flappy_bird.engine.graphics.IGraphics2D;
 import com.domhnall_boyle.flappy_bird.engine.graphics.Scale;
 import com.domhnall_boyle.flappy_bird.game.Game;
+import com.domhnall_boyle.flappy_bird.utilities.Vect;
 
 public class DualPipe extends GameObject {
 
@@ -16,7 +17,36 @@ public class DualPipe extends GameObject {
 
     public DualPipe(String pipeColour) {
         super();
-        this.setupPipes(pipeColour);
+        this.downPipe = new Pipe("PIPE_" + pipeColour + "_DOWN",
+                Game.getScreenWidth(),
+                0,
+                Game.getScreenWidth() + PIPE_WIDTH,
+                0);
+
+        this.upPipe = new Pipe("PIPE_" + pipeColour + "_UP",
+                Game.getScreenWidth(),
+                0,
+                Game.getScreenWidth() + PIPE_WIDTH,
+                0);
+
+        this.updatePipeSpacing();
+    }
+
+    public DualPipe(String pipeColour, int startX) {
+        super();
+        this.downPipe = new Pipe("PIPE_" + pipeColour + "_DOWN",
+                startX,
+                0,
+                startX + PIPE_WIDTH,
+                0);
+
+        this.upPipe = new Pipe("PIPE_" + pipeColour + "_UP",
+                startX,
+                0,
+                startX + PIPE_WIDTH,
+                0);
+
+        this.updatePipeSpacing();
     }
 
     @Override
@@ -24,24 +54,14 @@ public class DualPipe extends GameObject {
         this.upPipe.update();
         this.downPipe.update();
 
+        // TODO: Refactor: use the setupPipes() method somehow
+
         if (this.upPipe.rect.right <= 0) {
-            // update spacing between pipes
-            int startingPosition = this.getStartingPosition();
-
-            this.downPipe.setPosition(
-                    this.downPipe.initialX1,
-                    (startingPosition - MID_SPACING) - PIPE_HEIGHT,
-                    this.downPipe.initialX2,
-                    startingPosition - MID_SPACING
-            );
-
-            this.upPipe.setPosition(
-                    this.upPipe.initialX1,
-                    startingPosition + MID_SPACING,
-                    this.upPipe.initialX2,
-                    (startingPosition + MID_SPACING) + PIPE_HEIGHT
-            );
+            this.updatePipeSpacing();
         }
+
+        // update position of dual pipe object for reference
+        this.setPosition(this.upPipe.centre.getX(), this.upPipe.rect.top + MID_SPACING);
 
         // check for collisions
     }
@@ -52,24 +72,26 @@ public class DualPipe extends GameObject {
         this.downPipe.draw(graphics2D);
     }
 
-    private void setupPipes(String pipeColour) {
-        int startingPosition = this.getStartingPosition();
-        System.out.println(startingPosition + "/" + Scale.getY(100));
+    private void updatePipeSpacing() {
+        // update spacing between pipes
+        int startingPosition = this.getRandomY();
 
-        this.downPipe = new Pipe("PIPE_" + pipeColour + "_DOWN",
-                Game.getScreenWidth(),
+        this.downPipe.setPosition(
+                this.downPipe.initialX1,
                 (startingPosition - MID_SPACING) - PIPE_HEIGHT,
-                Game.getScreenWidth() + PIPE_WIDTH,
-                startingPosition - MID_SPACING);
+                this.downPipe.initialX2,
+                startingPosition - MID_SPACING
+        );
 
-        this.upPipe = new Pipe("PIPE_" + pipeColour + "_UP",
-                Game.getScreenWidth(),
+        this.upPipe.setPosition(
+                this.upPipe.initialX1,
                 startingPosition + MID_SPACING,
-                Game.getScreenWidth() + PIPE_WIDTH,
-                (startingPosition + MID_SPACING) + PIPE_HEIGHT);
+                this.upPipe.initialX2,
+                (startingPosition + MID_SPACING) + PIPE_HEIGHT
+        );
     }
 
-    private int getStartingPosition() {
+    private int getRandomY() {
         int randomPercentage = (int) (Math.random() * MAX_POSITION_PERCENT + MIN_POSITION_PERCENT);
 
         return Scale.getY(randomPercentage);

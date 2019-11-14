@@ -36,7 +36,9 @@ public abstract class GameScreen {
 
     public void draw(IGraphics2D graphics2D) {
         for (GameObject gameObject: this.gameObjects) {
-            gameObject.draw(graphics2D);
+            if (gameObject != null) {
+                gameObject.draw(graphics2D);
+            }
         }
     }
 

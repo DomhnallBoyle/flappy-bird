@@ -6,7 +6,7 @@ import com.domhnall_boyle.flappy_bird.game.Game;
 public class Player extends GameObject {
 
     public Player(String bitmap) {
-        super(bitmap, Scale.getX(47), Scale.getY(40),
-                Scale.getX(57), Scale.getY(45));
+        super(bitmap, Scale.getX(50), Scale.getY(40),
+                Scale.getX(60), Scale.getY(45));
     }
 }

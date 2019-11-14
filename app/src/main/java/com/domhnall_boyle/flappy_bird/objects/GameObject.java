@@ -14,7 +14,7 @@ public abstract class GameObject {
     protected Rect rect = new Rect();
     protected Bitmap bitmap;
     protected int initialX1, initialY1, initialX2, initialY2;
-    protected Vect centre= new Vect();
+    protected Vect centre = new Vect();
 
     public GameObject() {}
 
