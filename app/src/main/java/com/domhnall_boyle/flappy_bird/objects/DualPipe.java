@@ -7,7 +7,7 @@ import com.domhnall_boyle.flappy_bird.game.Game;
 public class DualPipe extends GameObject {
 
     private final int MID_SPACING = Scale.getY(10);
-    private final int MAX_POSITION_PERCENT = 60;
+    private final int MAX_POSITION_PERCENT = 55;
     private final int MIN_POSITION_PERCENT = 15;
     private final int PIPE_WIDTH = Scale.getX(15);
     private final int PIPE_HEIGHT = Scale.getY(60);

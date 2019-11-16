@@ -49,6 +49,10 @@ public class PlayScreen extends GameScreen {
         if (!this.gameOver) {
             for (Surface surface: this.surfaces) {
                 surface.update();
+
+                if (surface.intersects(this.player)) {
+                    this.gameOver = true;
+                }
             }
 
             this.scoreCounter.update();
