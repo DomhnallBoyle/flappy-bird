@@ -9,7 +9,7 @@ public class Input {
     private TouchHandler touchHandler;
 
     public Input(View view) {
-        this.touchHandler = new TouchHandler(view);
+        this.touchHandler = new TouchHandler();
         view.setOnTouchListener(this.touchHandler);
     }
 

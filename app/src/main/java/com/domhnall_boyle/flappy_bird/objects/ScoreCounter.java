@@ -8,10 +8,12 @@ import java.util.List;
 
 public class ScoreCounter extends GameObject {
 
-    private final int START_X = Scale.getX(50);
-    private final int START_Y = Scale.getY(10);
-    private final int DIGIT_WIDTH = Scale.getX(10);
-    private final int DIGIT_HEIGHT = Scale.getY(10);
+    // TODO: Fix constants
+
+    private int START_X = Scale.getX(50);
+    private int START_Y = Scale.getY(10);
+    private int DIGIT_WIDTH = Scale.getX(10);
+    private int DIGIT_HEIGHT = Scale.getY(10);
 
     private int score;
     private List<DigitCounter> digitCounters;
@@ -24,8 +26,22 @@ public class ScoreCounter extends GameObject {
         this.lock = new Object();
     }
 
+    public ScoreCounter(int x1, int y1, int width, int height) {
+        this.START_X = x1;
+        this.START_Y = y1;
+        this.DIGIT_WIDTH = width;
+        this.DIGIT_HEIGHT = height;
+        this.score = 0;
+        this.digitCounters = new ArrayList<>();
+        this.lock = new Object();
+    }
+
     public void updateScore() {
         this.score += 1;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 
     @Override
@@ -55,10 +71,16 @@ public class ScoreCounter extends GameObject {
 
     @Override
     public void draw(IGraphics2D graphics2D) {
-        synchronized (this.lock) {
-            for (DigitCounter digitCounter: this.digitCounters) {
-                digitCounter.draw(graphics2D);
+        if (this.visible) {
+            synchronized (this.lock) {
+                for (DigitCounter digitCounter: this.digitCounters) {
+                    digitCounter.draw(graphics2D);
+                }
             }
         }
+    }
+
+    public int getScore() {
+        return this.score;
     }
 }

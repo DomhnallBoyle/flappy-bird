@@ -17,7 +17,7 @@ public class Surface extends GameObject {
     @Override
     public void update() {
         this.setPosition(this.centre.getX() - X_SKIP, this.centre.getY());
-        if (this.rect.right < 0) {
+        if (this.rect.right <= 0) {
             int screenWidth = Game.getScreenWidth();
             int screenHeight = Game.getScreenHeight();
             this.setPosition(screenWidth, Scale.getY(85),

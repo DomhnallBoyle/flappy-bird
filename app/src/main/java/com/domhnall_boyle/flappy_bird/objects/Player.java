@@ -1,22 +1,18 @@
 package com.domhnall_boyle.flappy_bird.objects;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.util.DisplayMetrics;
 
 import com.domhnall_boyle.flappy_bird.engine.graphics.IGraphics2D;
 import com.domhnall_boyle.flappy_bird.engine.graphics.Scale;
 import com.domhnall_boyle.flappy_bird.engine.io.TouchEvent;
 import com.domhnall_boyle.flappy_bird.engine.io.TouchType;
-import com.domhnall_boyle.flappy_bird.engine.managers.AssetManager;
 
 import java.util.List;
 
 public class Player extends GameObject {
 
-    private final int UP_SKIP = -75;
+    private final int UP_SKIP = -150;
     private final int DOWN_SKIP = 4;
     private final int FLAP_DELAY = 25;
 
@@ -24,12 +20,20 @@ public class Player extends GameObject {
     private int bitmapFlag = 0;
     private String playerColour;
     private int rotation;
+    private float falling_delta = 0;
     private boolean onSurface = false;
+
+    // TODO: Smoother player movement on tap
 
     public Player(String playerColour) {
         super(playerColour + "BIRD_MIDFLAP",
-                Scale.getX(50), Scale.getY(40),
-                Scale.getX(60), Scale.getY(45));
+                Scale.getX(20), Scale.getY(40),
+                Scale.getX(30), Scale.getY(45));
+        this.playerColour = playerColour;
+    }
+
+    public Player(String playerColour, int x1, int y1, int x2, int y2) {
+        super(playerColour + "BIRD_MIDFLAP", x1, y1, x2, y2);
         this.playerColour = playerColour;
     }
 
@@ -38,7 +42,7 @@ public class Player extends GameObject {
         graphics2D.drawBitmap(this.bitmap, this.rotateBitmap(), null);
     }
 
-    public void update(List<TouchEvent> touchEvents, Surface[] surfaces, boolean gameOver) {
+    public void update(List<TouchEvent> touchEvents, Surface[] surfaces, boolean started, boolean gameOver) {
         if (!gameOver) {
             // update the player's bitmap to show flapping
             // only updates every 25 updates
@@ -62,35 +66,39 @@ public class Player extends GameObject {
                 this.flapDelay += 1;
             }
 
-            // update player based on touch events
-            if (touchEvents.size() > 0) {
-                TouchEvent touchEvent = touchEvents.get(0);
-                if (touchEvent.getType() == TouchType.TOUCH_DOWN) {
-                    this.setPosition(this.centre.getX(), this.centre.getY() + UP_SKIP);
-                    this.rotation = -35;
-                    this.delay = 25;
-                }
-            } else {
-                if (this.delay <= 0) {
-                    this.setPosition(this.centre.getX(), this.centre.getY() + DOWN_SKIP);
-                }
+            if (started) {
+                // update player based on touch events
+                if (touchEvents.size() > 0) {
+                    TouchEvent touchEvent = touchEvents.get(0);
+                    if (touchEvent.getType() == TouchType.TOUCH_DOWN) {
+                        this.setPosition(this.centre.getX(), this.centre.getY() + UP_SKIP);
+                        this.rotation = -35;
+                        this.delay = 25;
+                        this.assetManager.playSound("FLAP");
+                    }
+                } else {
+                    if (this.delay <= 0) {
+                        this.setPosition(this.centre.getX(), this.centre.getY() + DOWN_SKIP);
+                    }
 
-                this.delay -= 1;
+                    this.delay -= 1;
 
-                if (this.delay <= -50) {
-                    if (this.rotation <= 90) {
-                        this.rotation += 2;
+                    if (this.delay <= -50) {
+                        if (this.rotation <= 90) {
+                            this.rotation += 2;
+                        }
                     }
                 }
             }
         } else {
-            // TODO: Multiply by increasing delta to speed up death drop
             if (!this.onSurface) {
-                this.setPosition(this.centre.getX(), this.centre.getY() + DOWN_SKIP);
+                this.setPosition(this.centre.getX(), this.centre.getY() + DOWN_SKIP + this.falling_delta);
 
                 if (this.rotation <= 90) {
                     this.rotation += 10;
                 }
+
+                falling_delta += 0.1;
             }
         }
 
@@ -99,15 +107,17 @@ public class Player extends GameObject {
             setPosition(this.rect.left, 0,
                     this.rect.left + this.rect.width(), this.rect.height());
         }
-        for (Surface surface: surfaces) {
-            if (this.rect.bottom > surface.rect.top) {
-                this.onSurface = true;
+        if (surfaces != null) {
+            for (Surface surface: surfaces) {
+                if (this.rect.bottom > surface.rect.top) {
+                    this.onSurface = true;
+                }
             }
         }
     }
 
     private Bitmap getBitmap(String flapType) {
-        return AssetManager.getInstance().getBitmap(this.playerColour + "BIRD_" + flapType);
+        return this.assetManager.getBitmap(this.playerColour + "BIRD_" + flapType);
     }
 
     private Matrix rotateBitmap() {
@@ -117,5 +127,17 @@ public class Player extends GameObject {
         m.postTranslate(this.centre.getX(), this.centre.getY());
 
         return m;
+    }
+
+    public boolean isDead() {
+        return this.onSurface;
+    }
+
+    public String getPlayerColour() {
+        return this.playerColour;
+    }
+
+    public void setPlayerColour(String playerColour) {
+        this.playerColour = playerColour;
     }
 }

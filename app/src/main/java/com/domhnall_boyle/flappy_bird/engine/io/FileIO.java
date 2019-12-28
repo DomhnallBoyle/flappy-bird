@@ -1,11 +1,14 @@
 package com.domhnall_boyle.flappy_bird.engine.io;
 
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
+import android.media.SoundPool;
 
+import com.domhnall_boyle.flappy_bird.engine.audio.Sound;
 import com.domhnall_boyle.flappy_bird.utilities.Logger;
 
 import java.io.IOException;
@@ -47,5 +50,21 @@ public class FileIO {
         }
 
         return bitmap;
+    }
+
+    public Sound loadSound(String fileName, SoundPool soundPool) throws IOException
+    {
+        try
+        {
+            AssetFileDescriptor assetFileDescriptor = this.assetManager.openFd(fileName);
+            int soundId = soundPool.load(assetFileDescriptor, 0);
+
+            return new Sound(soundId);
+        }
+        catch(IOException e)
+        {
+            String message = "Could not load Sound: " + fileName + " - " + e.getMessage();
+            throw new IOException(message);
+        }
     }
 }

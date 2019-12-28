@@ -3,14 +3,15 @@ package com.domhnall_boyle.flappy_bird.objects;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 
-import androidx.constraintlayout.solver.widgets.Rectangle;
-
-import com.domhnall_boyle.flappy_bird.engine.graphics.Scale;
+import com.domhnall_boyle.flappy_bird.engine.io.TouchEvent;
+import com.domhnall_boyle.flappy_bird.engine.io.TouchType;
 import com.domhnall_boyle.flappy_bird.engine.managers.AssetManager;
 import com.domhnall_boyle.flappy_bird.engine.graphics.IGraphics2D;
 import com.domhnall_boyle.flappy_bird.utilities.Vect;
 
-public abstract class GameObject {
+import java.util.List;
+
+public class GameObject {
 
     protected final int X_SKIP = 2;
 
@@ -19,6 +20,7 @@ public abstract class GameObject {
     protected Bitmap bitmap;
     protected int initialX1, initialY1, initialX2, initialY2;
     protected Vect centre = new Vect();
+    protected boolean visible = true;
 
     public GameObject() {}
 
@@ -40,8 +42,19 @@ public abstract class GameObject {
         this.setPosition(x1, y1, x2, y2);
     }
 
+    public GameObject(int x1, int y1, int x2, int y2, boolean visible) {
+        this.initialX1 = x1;
+        this.initialY1 = y1;
+        this.initialX2 = x2;
+        this.initialY2 = y2;
+        this.setPosition(x1, y1, x2, y2);
+        this.visible = visible;
+    }
+
     public void draw(IGraphics2D graphics2D) {
-        graphics2D.drawBitmap(this.bitmap, null, this.rect, null);
+        if (this.visible) {
+            graphics2D.drawBitmap(this.bitmap, null, this.rect, null);
+        }
     }
 
     public void update() {}
@@ -69,5 +82,28 @@ public abstract class GameObject {
 
     public boolean intersects(GameObject gameObject) {
         return Rect.intersects(this.rect, gameObject.rect);
+    }
+
+    public void setIsShowing(boolean isShowing) {
+        this.visible = isShowing;
+    }
+
+    public void setBitmap(String bitmap) {
+        this.bitmap = this.assetManager.getBitmap(bitmap);
+    }
+
+    public Bitmap getBitmap() {
+        return this.bitmap;
+    }
+
+    public boolean isPressed(List<TouchEvent> touchEvents) {
+        if (touchEvents.size() > 0) {
+            TouchEvent touchEvent = touchEvents.get(0);
+            if (touchEvent.getType() == TouchType.TOUCH_DOWN) {
+                return this.rect.contains((int) touchEvent.getX(), (int) touchEvent.getY());
+            }
+        }
+
+        return false;
     }
 }

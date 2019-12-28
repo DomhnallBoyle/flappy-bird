@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.util.DisplayMetrics;
 
 import com.domhnall_boyle.flappy_bird.engine.graphics.IGraphics2D;
+import com.domhnall_boyle.flappy_bird.engine.managers.AssetManager;
 import com.domhnall_boyle.flappy_bird.engine.managers.ScreenManager;
 import com.domhnall_boyle.flappy_bird.game.Game;
 import com.domhnall_boyle.flappy_bird.objects.GameObject;
@@ -20,6 +21,7 @@ public abstract class GameScreen {
     protected Activity activity;
     protected Game game;
     protected List<GameObject> gameObjects;
+    protected AssetManager assetManager = AssetManager.getInstance();
 
     public GameScreen(Activity activity, Game game) {
         this.activity = activity;
@@ -35,9 +37,11 @@ public abstract class GameScreen {
     }
 
     public void draw(IGraphics2D graphics2D) {
-        for (GameObject gameObject: this.gameObjects) {
-            if (gameObject != null) {
-                gameObject.draw(graphics2D);
+        synchronized (this.gameObjects) {
+            for (GameObject gameObject: this.gameObjects) {
+                if (gameObject != null) {
+                    gameObject.draw(graphics2D);
+                }
             }
         }
     }
