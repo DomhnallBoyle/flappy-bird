@@ -1,2 +1,2 @@
 # Flappy Bird
-Contains my own code for the flappy-bird 2D game for android
+Contains my android and backend code for the famous Flappy Bird game

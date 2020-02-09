@@ -1,0 +1,7 @@
+Flask
+flask-bcrypt
+Flask-Limiter
+flask-jwt-extended
+flask-restplus
+requests
+sqlalchemy
