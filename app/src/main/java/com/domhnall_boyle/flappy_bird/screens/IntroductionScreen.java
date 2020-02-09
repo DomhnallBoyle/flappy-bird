@@ -1,9 +1,11 @@
 package com.domhnall_boyle.flappy_bird.screens;
 
-import android.app.Activity;
+import androidx.fragment.app.Fragment;
 
 import com.domhnall_boyle.flappy_bird.engine.graphics.Scale;
 import com.domhnall_boyle.flappy_bird.engine.io.TouchEvent;
+import com.domhnall_boyle.flappy_bird.fragments.LeaderboardFragment;
+import com.domhnall_boyle.flappy_bird.fragments.PlayFragment;
 import com.domhnall_boyle.flappy_bird.game.Game;
 import com.domhnall_boyle.flappy_bird.objects.Background;
 import com.domhnall_boyle.flappy_bird.objects.Button;
@@ -11,6 +13,7 @@ import com.domhnall_boyle.flappy_bird.objects.GameObject;
 import com.domhnall_boyle.flappy_bird.objects.Logo;
 import com.domhnall_boyle.flappy_bird.objects.Player;
 import com.domhnall_boyle.flappy_bird.objects.Surface;
+import com.domhnall_boyle.flappy_bird.utilities.MyApplication;
 
 import java.util.List;
 
@@ -25,8 +28,8 @@ public class IntroductionScreen extends GameScreen {
     private Button start, leaderboard;
     private Player player;
 
-    public IntroductionScreen(Activity activity, Game game) {
-        super(activity, game);
+    public IntroductionScreen(Fragment fragment, Game game) {
+        super(fragment, game);
 
         this.background = new Background("DAY");
         this.surface1 = new Surface();
@@ -38,6 +41,7 @@ public class IntroductionScreen extends GameScreen {
         this.addGameObjects(new GameObject[] {this.background, this.surface1, this.surface2,
                 this.logo, this.start, this.leaderboard});
         this.player = this.logo.getPlayer();
+        this.initialised = true;
     }
 
     @Override
@@ -51,12 +55,15 @@ public class IntroductionScreen extends GameScreen {
 
         // check if buttons pressed
         if (this.start.isPressed(touchEvents)) {
-            new PlayScreen(this.activity, this.game, this.background.getBackgroundType(), this.player.getPlayerColour());
+            MyApplication.changeFragment(new PlayFragment(this.game,
+                    this.background.getBackgroundType(), this.player.getPlayerColour()),
+                    true);
         }
 
-//        if (this.leaderboard.isPressed(touchEvents)) {
-//
-//        }
+        if (this.leaderboard.isPressed(touchEvents)) {
+            MyApplication.changeFragment(new LeaderboardFragment(this.game),
+                    true);
+        }
 
         if (this.player.isPressed(touchEvents)) {
             String playerColour = this.player.getPlayerColour();

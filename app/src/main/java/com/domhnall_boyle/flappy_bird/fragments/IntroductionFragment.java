@@ -1,42 +1,74 @@
 package com.domhnall_boyle.flappy_bird.fragments;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.app.Dialog;
+import android.widget.Button;
+import android.widget.EditText;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
+import com.domhnall_boyle.flappy_bird.R;
+import com.domhnall_boyle.flappy_bird.engine.rest.bodies.LoginBody;
+import com.domhnall_boyle.flappy_bird.engine.rest.repositories.AuthRepository;
 import com.domhnall_boyle.flappy_bird.game.Game;
+import com.domhnall_boyle.flappy_bird.models.User;
 import com.domhnall_boyle.flappy_bird.screens.IntroductionScreen;
+import com.domhnall_boyle.flappy_bird.utilities.MyApplication;
 
-public class IntroductionFragment extends Fragment {
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-    private Game game;
-    private IntroductionScreen introductionScreen;
+public class IntroductionFragment extends GameFragment {
 
-    public IntroductionFragment() {}
+    @BindView(R.id.login)
+    Button loginButton;
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        this.game = new Game(this.getContext());
-        this.introductionScreen = new IntroductionScreen(this.getActivity(), this.game);
+    @BindView(R.id.bypass)
+    Button bypass;
 
-        return this.game.getView();
+    @BindView(R.id.username)
+    EditText username;
+
+    @BindView(R.id.password)
+    EditText password;
+
+    public IntroductionFragment(Game game) {
+        super(game);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        game.resume();
+    public void onStart() {
+        super.onStart();
+        new IntroductionScreen(this, this.game);
+
+        if (!User.getInstance().isLoggedIn()) {
+            showLoginDialog();
+        }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        game.pause();
+    private void showLoginDialog() {
+        Dialog loginDialog = new Dialog(this.getContext());
+        loginDialog.setContentView(R.layout.login_dialog);
+        loginDialog.setCancelable(false);
+
+        ButterKnife.bind(this, loginDialog);
+
+        loginButton.setOnClickListener(view -> {
+            String username = this.username.getText().toString();
+            String password = this.password.getText().toString();
+
+            if (username.isEmpty() || password.isEmpty()) {
+                MyApplication.showMessage("Username and password are required");
+            } else {
+                new AuthRepository().login(new LoginBody(username, password)).observe(this, success -> {
+                    if (success) {
+                        loginDialog.dismiss();
+                    }
+                });
+            }
+        });
+
+        bypass.setOnClickListener(view -> {
+            loginDialog.dismiss();
+        });
+
+        loginDialog.show();
     }
 }

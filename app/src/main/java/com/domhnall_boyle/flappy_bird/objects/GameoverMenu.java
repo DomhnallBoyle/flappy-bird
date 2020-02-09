@@ -2,11 +2,7 @@ package com.domhnall_boyle.flappy_bird.objects;
 
 import com.domhnall_boyle.flappy_bird.engine.graphics.IGraphics2D;
 import com.domhnall_boyle.flappy_bird.engine.graphics.Scale;
-import com.domhnall_boyle.flappy_bird.engine.io.TouchEvent;
-import com.domhnall_boyle.flappy_bird.screens.PlayScreen;
 import com.domhnall_boyle.flappy_bird.utilities.PersonalBest;
-
-import java.util.List;
 
 public class GameoverMenu extends GameObject {
 

@@ -3,6 +3,10 @@ package com.domhnall_boyle.flappy_bird.utilities;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.domhnall_boyle.flappy_bird.engine.rest.bodies.HighScoreBody;
+import com.domhnall_boyle.flappy_bird.engine.rest.repositories.UserRespository;
+import com.domhnall_boyle.flappy_bird.models.User;
+
 public class PersonalBest {
 
     private SharedPreferences sharedPreferences;
@@ -26,6 +30,18 @@ public class PersonalBest {
             SharedPreferences.Editor editor = this.sharedPreferences.edit();
             editor.putInt("personalBest", this.personalBest);
             editor.apply();
+
+            if (User.getInstance().isLoggedIn()) {
+                new UserRespository().updateHighScore(new HighScoreBody(this.personalBest));
+            }
+        } else {
+            if (User.getInstance().isLoggedIn()) {
+                if (this.personalBest > User.getInstance().getHighScore()) {
+                    new UserRespository().updateHighScore(new HighScoreBody(this.personalBest));
+                    User.getInstance().setHighScore(this.personalBest);
+                }
+            }
+            this.newPersonalBest = false;
         }
     }
 

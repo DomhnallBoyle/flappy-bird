@@ -1,10 +1,9 @@
 package com.domhnall_boyle.flappy_bird.screens;
 
-import android.app.Activity;
+import androidx.fragment.app.Fragment;
 
 import com.domhnall_boyle.flappy_bird.engine.graphics.Scale;
 import com.domhnall_boyle.flappy_bird.engine.io.TouchEvent;
-import com.domhnall_boyle.flappy_bird.engine.io.TouchType;
 import com.domhnall_boyle.flappy_bird.game.Game;
 import com.domhnall_boyle.flappy_bird.objects.Background;
 import com.domhnall_boyle.flappy_bird.objects.Button;
@@ -32,8 +31,8 @@ public class PlayScreen extends GameScreen {
     private Button pause;
     private boolean started = false, gameOver = false, paused = false;
 
-    public PlayScreen(Activity activity, Game game, String backgroundType, String playerColour) {
-        super(activity, game);
+    public PlayScreen(Fragment fragment, Game game, String backgroundType, String playerColour) {
+        super(fragment, game);
 
         this.scoreCounter = new ScoreCounter();
         this.background = new Background(backgroundType);
@@ -57,6 +56,8 @@ public class PlayScreen extends GameScreen {
             this.surfaces[0], this.surfaces[1], this.scoreCounter, this.player, this.intro,
             this.pause, this.gameoverMenu
         });
+
+        this.initialised = true;
     }
 
     @Override
@@ -129,7 +130,7 @@ public class PlayScreen extends GameScreen {
                         this.gameoverMenu.setScore(this.scoreCounter.getScore());
                         this.gameoverMenu.setIsShowing(true);
                         if (this.gameoverMenu.getStartButton().isPressed(touchEvents)) {
-                            new PlayScreen(this.activity, this.game, this.background.getBackgroundType(), this.player.getPlayerColour());
+                            new PlayScreen(fragment, this.game, this.background.getBackgroundType(), this.player.getPlayerColour());
                         }
                     }
                 }

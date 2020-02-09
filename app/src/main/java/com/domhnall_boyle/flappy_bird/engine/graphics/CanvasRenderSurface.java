@@ -22,11 +22,6 @@ public class CanvasRenderSurface extends View implements IRenderSurface {
         postInvalidate(); // invalidate the View from non-UI threads to redraw the view again
     }
 
-//    @Override
-//    public View getAsView() {
-//        return this;
-//    }
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);

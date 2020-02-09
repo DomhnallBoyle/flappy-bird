@@ -3,6 +3,8 @@ package com.domhnall_boyle.flappy_bird.screens;
 import android.app.Activity;
 import android.util.DisplayMetrics;
 
+import androidx.fragment.app.Fragment;
+
 import com.domhnall_boyle.flappy_bird.engine.graphics.IGraphics2D;
 import com.domhnall_boyle.flappy_bird.engine.managers.AssetManager;
 import com.domhnall_boyle.flappy_bird.engine.managers.ScreenManager;
@@ -19,18 +21,21 @@ public abstract class GameScreen {
     private DisplayMetrics displayMetrics;
     protected int width, height;
     protected Activity activity;
+    protected Fragment fragment;
     protected Game game;
     protected List<GameObject> gameObjects;
     protected AssetManager assetManager = AssetManager.getInstance();
+    protected boolean initialised = false;
 
-    public GameScreen(Activity activity, Game game) {
-        this.activity = activity;
+    public GameScreen(Fragment fragment, Game game) {
+        this.fragment = fragment;
+        this.activity = fragment.getActivity();
         this.game = game;
         this.displayMetrics = new DisplayMetrics();
         this.gameObjects = new ArrayList<>();
 
         // TODO: Not sure I need this - getWidth() and getHeight() functions
-        activity.getWindowManager().getDefaultDisplay().getMetrics(this.displayMetrics);
+        this.activity.getWindowManager().getDefaultDisplay().getMetrics(this.displayMetrics);
         this.width = this.displayMetrics.widthPixels;
         this.height = this.displayMetrics.heightPixels;
         ScreenManager.getInstance().setCurrentScreen(this);
@@ -47,7 +52,9 @@ public abstract class GameScreen {
     }
 
     public void update() {
-        this._update();
+        if (this.initialised) {
+            this._update();
+        }
     }
 
     public int getWidth() {
